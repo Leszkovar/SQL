@@ -1,0 +1,61 @@
+Example 1
+
+https://www.hackerrank.com/challenges/revising-the-select-query/problem?isFullScreen=true
+
+SELECT Sum(C.population)
+FROM   city C,
+       country Co
+WHERE  C.countrycode = Co.code
+       AND Co.continent LIKE '%Asia';  
+
+Example 2
+
+https://www.hackerrank.com/challenges/average-population-of-each-continent/problem
+
+SELECT co.continent,
+       Floor(Avg(C.population))
+FROM   city C,
+       country Co
+WHERE  C.countrycode = Co.code
+GROUP  BY co.continent;  
+
+Example 3
+
+https://www.hackerrank.com/challenges/full-score/problem?isFullScreen=true
+
+SELECT S.hacker_id,
+       H.NAME
+FROM   challenges C,
+       difficulty D,
+       hackers H,
+       submissions S
+WHERE  S.hacker_id = H.hacker_id
+       AND C.difficulty_level = D.difficulty_level
+       AND S.hacker_id = H.hacker_id
+       AND S.challenge_id = C.challenge_id
+       AND D.score = S.score
+GROUP  BY S.hacker_id,
+          H.NAME
+HAVING Count(S.hacker_id) > 1
+ORDER  BY Count(S.hacker_id) DESC,
+          S.hacker_id ASC;  
+
+Example 4
+
+https://www.hackerrank.com/challenges/contest-leaderboard/problem?isFullScreen=true
+
+SELECT H.hacker_id,
+       H.NAME,
+       Sum(S.score)
+FROM   hackers H,
+       (SELECT Max(score) score,
+               ss.hacker_id
+        FROM   submissions SS
+        GROUP  BY ss.hacker_id,
+                  challenge_id) S
+WHERE  S.hacker_id = H.hacker_id
+GROUP  BY H.NAME,
+          H.hacker_id
+HAVING Sum(S.score) != 0
+ORDER  BY Sum(s.score) DESC,
+          hacker_id ASC;  
